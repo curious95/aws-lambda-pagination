@@ -1,13 +1,12 @@
 package com.amazonaws.lambda_template;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.amazonaws.lambda_template.ProcessShop;
-import com.amazonaws.lambda_template.Shop;
 import com.amazonaws.services.lambda.runtime.Context;
 
 /**
@@ -16,11 +15,14 @@ import com.amazonaws.services.lambda.runtime.Context;
 public class ProcessShopTest {
 
     private static Shop shop;
+    private static Paginator paginator;
+
 
     @BeforeClass
     public static void createInput() throws IOException {
         // TODO: set up your sample input object here.
-        shop = new Shop("23123", 2);
+    	paginator = new Paginator(1,2,3,"None");
+    	shop = new Shop("23123", 2, paginator);
     }
 
     private Context createContext() {
@@ -37,9 +39,9 @@ public class ProcessShopTest {
         ProcessShop handler = new ProcessShop();
         Context ctx = createContext();
         
-        String output = handler.handleRequest(shop, ctx);
+        Map<String, Object> output = handler.handleRequest(shop, ctx);
 
         // TODO: validate output here if needed.
-        Assert.assertEquals("Shop with ID "+shop.shop_id+ " got a score of "+shop.operation_number, output);
+        Assert.assertEquals("Shop with ID "+shop.getShop_id()+ " got a score of "+shop.getOperation_number(), output);
     }
 }
